@@ -619,33 +619,41 @@ Set `python-indent' locally to the value guessed."
 	      (forward-line -1))
 	    (current-indentation))))
        ((python-continuation-line-p)   ; after backslash, or bracketed
-	(let ((point (point))
-	      (open-start (cadr syntax))
-	      (backslash (python-backslash-continuation-line-p))
-	      (colon (eq ?: (char-before (1- (line-beginning-position))))))
+	(let* ((point (point))
+	       (open-start (cadr syntax))
+	       (closing (and open-start
+			     (progn
+			       (back-to-indentation)
+			       (eq (char-after)
+				   (cdr-safe (syntax-after open-start))))))
+	       (backslash (python-backslash-continuation-line-p)))
 	  (if open-start
 	      ;; Inside bracketed expression.
 	      (progn
 		(goto-char (1+ open-start))
-		;; Look for first item in list (preceding point) and
-		;; align with it, if found.
-		(if (with-syntax-table python-space-backslash-table
-		      (let ((parse-sexp-ignore-comments t))
-			(condition-case ()
-			    (progn (forward-sexp)
-				   (backward-sexp)
-				   (< (point) point))
-			  (error nil))))
-		    ;; Extra level if we're backslash-continued or
-		    ;; following a key.
-		    (if (or backslash colon)
-			(+ python-indent (current-column))
+		(if (and (looking-at-p "\\s-*$") closing)
+		    (current-indentation)
+		  ;; Look for first item in list (preceding point) and align
+		  ;; with it, if found.
+		  (if (with-syntax-table python-space-backslash-table
+			(let ((parse-sexp-ignore-comments t))
+			  (condition-case ()
+			      (progn (forward-sexp)
+				     (backward-sexp)
+				     (< (point) point))
+			    (error nil))))
+		      ;; Extra level if we're backslash-continued or
+		      ;; following a key.
+		      (if backslash
+			  (+ python-indent (current-column))
 			(current-column))
-		  ;; Otherwise indent relative to statement start, one
-		  ;; level per bracketing level.
-		  (goto-char (1+ open-start))
-		  (python-beginning-of-statement)
-		  (+ (current-indentation) (* (car syntax) python-indent))))
+		    ;; Otherwise indent relative to statement start, one
+		    ;; level per bracketing level.
+		    (goto-char (1+ open-start))
+		    (python-beginning-of-statement)
+		    (+ (current-indentation) (* (car syntax) python-indent)
+		       (if (python-open-block-statement-p t)
+			   python-indent 0)))))
 	    ;; Otherwise backslash-continued.
 	    (forward-line -1)
 	    (if (python-continuation-line-p)
