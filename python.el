@@ -2337,58 +2337,6 @@ Interactively, prompt for the name with completion."
         (abbrev-insert sym)
       (error "Undefined template: %s" name))))
 
-;;;; Bicycle Repair Man support
-
-(autoload 'pymacs-load "pymacs" nil t)
-(autoload 'brm-init "bikeemacs")
-(defvar brm-menu)
-
-;; I'm not sure how useful BRM really is, and it's certainly dangerous
-;; the way it modifies files outside Emacs...  Also note that the
-;; current BRM loses with tabs used for indentation -- I submitted a
-;; fix <URL:http://www.loveshack.ukfsn.org/emacs/bikeemacs.py.diff>.
-(defun python-setup-brm ()
-  "Set up Bicycle Repair Man refactoring tool (if available).
-
-Note that the `refactoring' features change files independently of
-Emacs and may modify and save the contents of the current buffer
-without confirmation."
-  (interactive)
-  (condition-case data
-      (unless (fboundp 'brm-rename)
-	(pymacs-load "bikeemacs" "brm-") ; first line of normal recipe
-	(let ((py-mode-map (make-sparse-keymap)) ; it assumes this
-	      (features (cons 'python-mode features))) ; and requires this
-	  (brm-init)			; second line of normal recipe
-	  (remove-hook 'python-mode-hook ; undo this from `brm-init'
-		       (lambda () (easy-menu-add brm-menu)))
-	  (easy-menu-define
-	    python-brm-menu python-mode-map
-	    "Bicycle Repair Man"
-	    '("BicycleRepairMan"
-	      :help "Interface to navigation and refactoring tool"
-	      "Queries"
-	      ["Find References" brm-find-references
-	       :help "Find references to name at point in compilation buffer"]
-	      ["Find Definition" brm-find-definition
-	       :help "Find definition of name at point"]
-	      "-"
-	      "Refactoring"
-	      ["Rename" brm-rename
-	       :help "Replace name at point with a new name everywhere"]
-	      ["Extract Method" brm-extract-method
-	       :active (and mark-active (not buffer-read-only))
-	       :help "Replace statements in region with a method"]
-	      ["Extract Local Variable" brm-extract-local-variable
-	       :active (and mark-active (not buffer-read-only))
-	       :help "Replace expression in region with an assignment"]
-	      ["Inline Local Variable" brm-inline-local-variable
-	       :help
-	       "Substitute uses of variable at point with its definition"]
-	      ;; Fixme:  Should check for anything to revert.
-	      ["Undo Last Refactoring" brm-undo :help ""]))))
-    (error (error "BicycleRepairMan setup failed: %s" data))))
-
 ;;;; Modes.
 
 ;; pdb tracking is alert once this file is loaded, but takes no action if
@@ -2501,7 +2449,6 @@ with skeleton expansions for compound statement templates.
 		     (setq indent-tabs-mode nil)))
 (custom-add-option 'python-mode-hook 'turn-on-eldoc-mode)
 (custom-add-option 'python-mode-hook 'abbrev-mode)
-(custom-add-option 'python-mode-hook 'python-setup-brm)
 
 ;;;###autoload
 (define-derived-mode jython-mode python-mode  "Jython"
@@ -2730,6 +2677,5 @@ comint believe the user typed this string so that
                            nil))
 
 (provide 'python)
-(provide 'python-21)
 
 ;;; python.el ends here
