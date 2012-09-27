@@ -1159,7 +1159,7 @@ precede it)."
 		(or (group "def") (group "class"))	   ; type
 		(1+ space) (group (1+ (or word ?_))))	   ; name
 	    nil t)
-      (unless (python-in-string/comment)
+      (unless (save-match-data (python-in-string/comment))
 	(let ((pos (match-beginning 0))
 	      (name (match-string-no-properties 3)))
 	  (if (match-beginning 2)	; def or class?
