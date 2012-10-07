@@ -9,4 +9,6 @@
     (should-not (nth 3 (syntax-ppss 44)))
     (should-not (nth 3 (syntax-ppss 52)))
     (should-not (nth 3 (syntax-ppss 64)))
-    (should-not (nth 3 (syntax-ppss 105)))))
+    (should-not (nth 3 (syntax-ppss 105)))
+    (should-not (nth 3 (syntax-ppss 122)))
+    (should-not (nth 3 (syntax-ppss 140)))))

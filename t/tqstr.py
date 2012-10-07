@@ -5,3 +5,5 @@ x '"""' x """ \"""" x
 
 # empty triple quoted string
   """""" x
+  ''''''"""""" x
+  u""""""'''''' x
