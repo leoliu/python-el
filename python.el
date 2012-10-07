@@ -170,8 +170,8 @@
   ;; First avoid a sequence preceded by an odd number of backslashes.
   (syntax-propertize-rules
    (;; ¡Backrefs don't work in syntax-propertize-rules!
-    (concat "\\(?:\\([RUru]\\)[Rr]?\\|^\\|[^\\]\\(?:\\\\.\\)*\\)" ;Prefix.
-              "\\(?:\\('\\)'\\('\\)\\|\\(?2:\"\\)\"\\(?3:\"\\)\\)")
+    (concat "\\(?:\\([RUru]\\)[Rr]?\\|^\\|[^\\]\\(?:\\\\.\\)*\\)?" ;Prefix.
+	    "\\(?:\\('\\)'\\('\\)\\|\\(?2:\"\\)\"\\(?3:\"\\)\\)")
     (3 (ignore (python-quote-syntax))))
    ;; This doesn't really help.
    ;;((rx (and ?\\ (group ?\n))) (1 " "))
