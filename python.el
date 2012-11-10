@@ -942,7 +942,7 @@ Finds end of innermost nested class or method definition."
 	(goto-char (point-max)))))
 
 (defun python-beginning-of-statement ()
-  "Go to start of current statement.
+  "Go to the start of current statement and return point.
 Accounts for continuation lines, multi-line strings, and
 multi-line bracketed expressions."
   (while
@@ -951,7 +951,8 @@ multi-line bracketed expressions."
         (beginning-of-line)
         (or (python-beginning-of-string)
             (python-skip-out))))
-  (back-to-indentation))
+  (back-to-indentation)
+  (point))
 
 (defun python-skip-out (&optional forward syntax)
   "Skip out of any nested brackets.
