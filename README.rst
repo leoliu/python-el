@@ -16,5 +16,19 @@ feature set. Being a happy user of Dave's ``python.el``, I extracted
 placed it here for the convenience of people so that they don't have
 to fix something that ain't broken.
 
+INSTALL
+=======
+
+File ``emacs.py``, ``emacs2.py`` and ``emacs3.py`` should be placed in
+``PYTHONPATH`` or ``data-directory``.
+
+If you place these files in a different directory, you need something
+like this (remember to replace `MY_EMACSPY_DIR` with the real path)::
+
+  (defadvice run-python (around python-emacspy-directory activate)
+    (let ((process-environment (cons (concat "PYTHONPATH=" "MY_EMACSPY_DIR")
+                                     process-environment)))
+      ad-do-it))
+
 .. _Dave Love: http://www.loveshack.ukfsn.org/emacs/index.html
 .. _emacs trunk: http://repo.or.cz/w/emacs.git
