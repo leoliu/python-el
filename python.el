@@ -1,13 +1,13 @@
-;;; python.el --- silly walks for Python  -*- coding: iso-8859-1 -*-
+;;; python.el --- silly walks for Python
 
-;; Copyright (C) 2003-2012  Free Software Foundation, Inc.
+;; Copyright (C) 2003-2013  Free Software Foundation, Inc.
 
 ;; Author: Dave Love <fx@gnu.org>
-;; Maintainer: FSF
+;; Maintainer: Leo Liu <sdl.web@gmail.com>
 ;; Created: Nov 2003
 ;; Keywords: languages
 
-;; This file is part of GNU Emacs.
+;; This file was part of GNU Emacs.
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@
 
 (defvar python-font-lock-keywords
   `(,(rx symbol-start
-	 ;; From v 2.7 reference, § keywords.
+	 ;; From v 2.7 reference, Â§ keywords.
 	 ;; def and class dealt with separately below
 	 (or "and" "as" "assert" "break" "continue" "del" "elif" "else"
 	     "except" "exec" "finally" "for" "from" "global" "if"
@@ -99,7 +99,7 @@
              ;; Python 3
              "nonlocal")
 	 symbol-end)
-    (,(rx symbol-start "None" symbol-end)	; see § Keywords in 2.7 manual
+    (,(rx symbol-start "None" symbol-end)	; see Â§ Keywords in 2.7 manual
      . font-lock-constant-face)
     ;; Definitions
     (,(rx symbol-start (group "class") (1+ space) (group (1+ (or word ?_))))
@@ -169,7 +169,7 @@
   ;; string delimiters.  Fixme: Is there a better way?
   ;; First avoid a sequence preceded by an odd number of backslashes.
   (syntax-propertize-rules
-   (;; ¡Backrefs don't work in syntax-propertize-rules!
+   (;; Â¡Backrefs don't work in syntax-propertize-rules!
     (concat "\\(?:\\([RUru]\\)[Rr]?\\|\\(?:\\=\\|[^\\]\\)\\(?:\\\\.\\)*\\)?" ;Prefix.
 	    "\\(?:\\('\\)'\\('\\)\\|\\(?2:\"\\)\"\\(?3:\"\\)\\)")
     (3 (ignore (python-quote-syntax))))
